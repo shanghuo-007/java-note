@@ -109,6 +109,32 @@ calendar.add(Calendar.MONTH,1);
 - 所有的日期类都是可变的，因此他们都**不是线程安全的**，这是Java日期类最大的问题之一。
 - 日期类并不提供国际化，没有时区支持，因此Java引入了java.util.Calendar和java.util.TimeZone类，但他们同样存在上述所有的问题。
 
+### SimpleDateFormat解决线程安全问题
+
+看看阿里巴巴 java 开发手册中推荐的 ThreadLocal 的用法:
+
+```java
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+ 
+public class DateUtils {
+    public static final ThreadLocal<DateFormat> df = new ThreadLocal<DateFormat>(){
+        @Override
+        protected DateFormat initialValue() {
+            return new SimpleDateFormat("yyyy-MM-dd");
+        }
+    };
+}
+```
+
+然后我们再要用到 DateFormat 对象的地方，这样调用：
+
+```java
+DateUtils.df.get().format(new Date());
+```
+
+
+
 ## Java8中新添加的时间API
 
 - java.time包：这是新的Java日期/时间API的基础包，所有的主要基础类都是这个包的一部分，如：LocalDate, LocalTime, LocalDateTime, Instant, Period, Duration等等。所有这些类都是不可变的和线程安全的，在绝大多数情况下，这些类能够有效地处理一些公共的需求。
