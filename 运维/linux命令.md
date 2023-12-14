@@ -30,5 +30,7 @@ mv name1 name2
 
 ## ftp 命令
 
+- 连接服务器：`ftp ip-address`
 - 下载：`get source dest`
 - 上传：`put source dest`
+- 断开：`bye`
